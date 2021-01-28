@@ -1,0 +1,23 @@
+#!/usr/bin/env bash
+
+set -e
+
+# Initial setup
+mix deps.get --only prod
+MIX_ENV=prod mix compile
+
+# Install / update  JavaScript dependencies
+cd assets_new && yarn ; cd ..
+
+# Compile assets
+cd assets_new && yarn build ; cd ..
+echo "renaming manifest.json -> cache_manifest.json"
+mv priv/static/manifest.json priv/static/cache_manifest.json
+## we skip phx.digest because files we get are already with a hash in the name
+## there might be a smarter workaround, yet this seems to be simpler and portable
+# mix phx.digest
+
+
+# Generate release
+# --overwrite forces update without manual prompt
+MIX_ENV=prod mix release --overwrite
