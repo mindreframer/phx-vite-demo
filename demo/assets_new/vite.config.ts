@@ -7,5 +7,19 @@ export default defineConfig({
     jsxFactory: 'h',
     jsxFragment: 'Fragment'
   },
+  build: {
+    manifest: true,
+    target: "es2018",
+    outDir: "../priv/static", // phoenix expects our files here
+    emptyOutDir: true, // cleanup previous builds
+    polyfillDynamicImport: true,
+    sourcemap: true, // we want to debug our code in production
+    rollupOptions: {
+      // overwrite default .html entry
+      input: {
+        main: "src/main.tsx",
+      }
+    },
+  },
   plugins: [preactRefresh()]
 })
